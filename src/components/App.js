@@ -9,6 +9,9 @@ import PopupUpdateAvatarForm from './PopupUpdateAvatarForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
 
+import Register from './Register';
+import Login from './Login';
+
 function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
     const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -128,45 +131,54 @@ function App() {
     };
 
 
-    return (
-        <CurrentUserContext.Provider value={currentUser}>
+    return (<>
+    <Header />
+        <Login/>
+        <Footer />
+    
+    </>
+        
 
-            <Header />
 
-            <Main
-                cards={cards}
-                onEditProfile={handleEditProfileClick}
-                onAddPlace={handleAddPlaceClick}
-                onEditAvatar={handleEditAvatarClick}
-                onCardClick={handleCardClick}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-            />
-            <Footer />
+        // <CurrentUserContext.Provider value={currentUser}>
 
-            <PopupAdd
-                isOpen={isAddPlacePopupOpen}
-                onClose={closeAllPopups}
-                onAddPlace={handleAddPlaceSubmit}
-            />
+        //     <Header />
 
-            <PopupEdit
-                isOpen={isEditProfilePopupOpen}
-                onClose={closeAllPopups}
-                onUpdateUser={handleUpdateUser}
-            />
+        //     <Main
+        //         cards={cards}
+        //         onEditProfile={handleEditProfileClick}
+        //         onAddPlace={handleAddPlaceClick}
+        //         onEditAvatar={handleEditAvatarClick}
+        //         onCardClick={handleCardClick}
+        //         onCardLike={handleCardLike}
+        //         onCardDelete={handleCardDelete}
+        //     />
+        //     <Footer />
 
-            <PopupUpdateAvatarForm
-                onUpdateAvatar={handleUpdateAvatar}
-                isOpen={isEditAvatarPopupOpen}
-                onClose={closeAllPopups} />
+        //     <PopupAdd
+        //         isOpen={isAddPlacePopupOpen}
+        //         onClose={closeAllPopups}
+        //         onAddPlace={handleAddPlaceSubmit}
+        //     />
 
-            <ImagePopup
-                card={selectedCard}
-                onClose={closeAllPopups}
-            />
+        //     <PopupEdit
+        //         isOpen={isEditProfilePopupOpen}
+        //         onClose={closeAllPopups}
+        //         onUpdateUser={handleUpdateUser}
+        //     />
 
-        </CurrentUserContext.Provider>
+        //     <PopupUpdateAvatarForm
+        //         onUpdateAvatar={handleUpdateAvatar}
+        //         isOpen={isEditAvatarPopupOpen}
+        //         onClose={closeAllPopups} />
+
+        //     <ImagePopup
+        //         card={selectedCard}
+        //         onClose={closeAllPopups}
+        //     />
+
+        // </CurrentUserContext.Provider>
+       
 
     );
 }

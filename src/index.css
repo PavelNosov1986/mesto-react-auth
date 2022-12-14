@@ -45,3 +45,11 @@
 @import url(./blocks/popup/__save/_inactive/popup__save_inactive.css);
 @import url(./blocks/popup/__save/_avatar/popup__save_avatar.css);
 @import url(./blocks/element/__delete-active/element__delete-active.css);
+@import url(./blocks/auth/auth.css);
+@import url(./blocks/popup/__title/_auth/popup__title_auth.css);
+@import url(./blocks/popup/__input/_auth/popup__input_auth.css);
+@import url(./blocks/popup/__save/_auth/popup__save_auth.css);
+@import url(./blocks/auth/__signup-link/auth__signup-link.css);
+@import url(./blocks/header/__email/header__email.css);
+@import url(./blocks/header/__user-data/header__user-data.css);
+@import url(./blocks/header/__link/header__link.css);
