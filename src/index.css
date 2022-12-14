@@ -53,3 +53,5 @@
 @import url(./blocks/header/__email/header__email.css);
 @import url(./blocks/header/__user-data/header__user-data.css);
 @import url(./blocks/header/__link/header__link.css);
+@import url(./blocks/popup/__tooltip-image/popup__tooltip-mage.css);
+@import url(./blocks/popup/__tooltip-info/popup__tooltip-info.css);

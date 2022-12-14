@@ -11,6 +11,7 @@ import api from '../utils/api';
 
 import Register from './Register';
 import Login from './Login';
+import InfoTooltip from './InfoTooltip';
 
 function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -131,15 +132,9 @@ function App() {
     };
 
 
-    return (<>
-    <Header />
-        <Login/>
-        <Footer />
-    
-    </>
-        
-
-
+    return (
+        < InfoTooltip />
+          
         // <CurrentUserContext.Provider value={currentUser}>
 
         //     <Header />
