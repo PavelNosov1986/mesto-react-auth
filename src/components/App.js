@@ -8,10 +8,14 @@ import PopupEdit from './PopupEdit';
 import PopupUpdateAvatarForm from './PopupUpdateAvatarForm';
 import ImagePopup from './ImagePopup';
 import api from '../utils/api';
+import * as auth from "../utils/Auth";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 
 import Register from './Register';
 import Login from './Login';
 import InfoTooltip from './InfoTooltip';
+import ProtectedRoute from "./ProtectedRoute";
+
 
 function App() {
     const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -20,6 +24,32 @@ function App() {
     const [selectedCard, setSelectedCard] = useState(null);
     const [currentUser, setCurrentUser] = useState({});
     const [cards, setCards] = useState([]);
+
+    const [isRegistered, setIsRegistered] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [isInfoTooltipOpened, setIsInfoTooltipOpened] = useState(false);
+    const [email, setEmail] = useState("");
+    const history = useHistory();
+
+    useEffect(() => {
+        const jwt = localStorage.getItem("jwt");
+        if (jwt) {
+            auth
+                .getToken(jwt)
+                .then((res) => {
+                    setEmail(res.data.email);
+                    setLoggedIn(true);
+                    history.push("/");
+                })
+                .catch((err) => {
+                    if (err.status === 400) {
+                        console.log("400 — Токен не передан или передан не в том формате");
+                    } else if (err.status === 401) {
+                        console.log("401 — Переданный токен некорректен");
+                    }
+                });
+        }
+    }, [history]);
 
     useEffect(() => {
         api.fetchGetMe()
@@ -57,6 +87,7 @@ function App() {
         setIsEditProfilePopupOpen(false);
         setIsAddPlacePopupOpen(false);
         setIsEditAvatarPopupOpen(false);
+        setIsInfoTooltipOpened(false);
         setSelectedCard(null);
     }
 
@@ -132,48 +163,121 @@ function App() {
     };
 
 
+    function handleRegister(data) {
+        auth
+            .register(data)
+            .then(() => {
+                setIsRegistered(true);
+                setIsInfoTooltipOpened(true);
+                history.push("/signin");
+            })
+            .catch((err) => {
+                if (err.status === 400) {
+                    console.log("400 - не передано одно из полей ");
+                }
+                //console.error(err);
+                setIsRegistered(false);
+                setIsInfoTooltipOpened(true);
+                console.log(setIsInfoTooltipOpened(true));
+            });
+    }
+
+    function handleLogin(data) {
+        auth
+            .login(data)
+            .then((res) => {
+                if (res.token) {
+                    setLoggedIn(true);
+                    setEmail(data.email);
+                    localStorage.setItem("jwt", res.token);
+                    history.push("/");
+                }
+            })
+            .catch((err) => {
+                if (err.status === 400) {
+                    console.log("400 - не передано одно из полей");
+                } else if (err.status === 401) {
+                    console.log("401 - пользователь c email не найден ");
+                }
+
+                setIsRegistered(false);
+                setIsInfoTooltipOpened(true);
+            });
+    }
+
+    function handleSignOut() {
+        setLoggedIn(false);
+        localStorage.removeItem("jwt");
+        history.push("/signin");
+    }
+
+
     return (
-        < InfoTooltip />
-          
-        // <CurrentUserContext.Provider value={currentUser}>
+        <CurrentUserContext.Provider value={currentUser}>
 
-        //     <Header />
+            <Header userEmail={email} onSignOut={handleSignOut} />
+            <Switch>
 
-        //     <Main
-        //         cards={cards}
-        //         onEditProfile={handleEditProfileClick}
-        //         onAddPlace={handleAddPlaceClick}
-        //         onEditAvatar={handleEditAvatarClick}
-        //         onCardClick={handleCardClick}
-        //         onCardLike={handleCardLike}
-        //         onCardDelete={handleCardDelete}
-        //     />
-        //     <Footer />
+                <ProtectedRoute
+                    exact
+                    path="/"
+                    loggedIn={loggedIn}
+                    component={Main}
+                    cards={cards}
+                    onEditProfile={handleEditProfileClick}
+                    onAddPlace={handleAddPlaceClick}
+                    onEditAvatar={handleEditAvatarClick}
+                    onCardClick={handleCardClick}
+                    onCardLike={handleCardLike}
+                    onCardDelete={handleCardDelete}
+                >
+                </ProtectedRoute>
 
-        //     <PopupAdd
-        //         isOpen={isAddPlacePopupOpen}
-        //         onClose={closeAllPopups}
-        //         onAddPlace={handleAddPlaceSubmit}
-        //     />
+                <Route exact path="/">
+                    {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
+                </Route>
 
-        //     <PopupEdit
-        //         isOpen={isEditProfilePopupOpen}
-        //         onClose={closeAllPopups}
-        //         onUpdateUser={handleUpdateUser}
-        //     />
+                <Route path="/signup">
+                    <Register onRegister={handleRegister} />
+                </Route>
 
-        //     <PopupUpdateAvatarForm
-        //         onUpdateAvatar={handleUpdateAvatar}
-        //         isOpen={isEditAvatarPopupOpen}
-        //         onClose={closeAllPopups} />
+                <Route path="/signin">
+                    <Login onLogin={handleLogin} />
+                </Route>
 
-        //     <ImagePopup
-        //         card={selectedCard}
-        //         onClose={closeAllPopups}
-        //     />
+            </Switch>
+            <Footer />
 
-        // </CurrentUserContext.Provider>
-       
+            <InfoTooltip
+                isOpen={isInfoTooltipOpened}
+                onClose={closeAllPopups}
+                isOK={isRegistered}
+            />
+
+            <PopupAdd
+                isOpen={isAddPlacePopupOpen}
+                onClose={closeAllPopups}
+                onAddPlace={handleAddPlaceSubmit}
+            />
+
+            <PopupEdit
+                isOpen={isEditProfilePopupOpen}
+                onClose={closeAllPopups}
+                onUpdateUser={handleUpdateUser}
+            />
+
+            <PopupUpdateAvatarForm
+                onUpdateAvatar={handleUpdateAvatar}
+                isOpen={isEditAvatarPopupOpen}
+                onClose={closeAllPopups}
+            />
+
+            <ImagePopup
+                card={selectedCard}
+                onClose={closeAllPopups}
+            />
+
+        </CurrentUserContext.Provider>
 
     );
 }

@@ -1,19 +1,19 @@
 import logo from '../images/logo.svg';
-// import { Switch, Route, Link } from "react-router-dom";
+import { Switch, Route, Link } from "react-router-dom";
 
-function Header({ userEmail, onLogOut }) {
+function Header({ userEmail,  onSignOut}) {
     return (<header className="header">
         <img src={logo} alt="Россия" className="header__logo" />
-        {/* <Switch>
+        <Switch>
 
-          <Route path="/sign-up">
-            <Link className="header__link" to="/sign-in">
+          <Route path="/signup">
+            <Link className="header__link" to="/signin">
               Войти
             </Link>
           </Route>
 
-          <Route path="/sign-in">
-            <Link className="header__link" to="/sign-up">
+          <Route path="/signin">
+            <Link className="header__link" to="/signup">
               Регистрация
             </Link>
           </Route>
@@ -21,13 +21,13 @@ function Header({ userEmail, onLogOut }) {
           <Route exact path="/">
             <div className="header__user-data">
               <p className="header__email">{userEmail}</p>
-              <Link className="header__link" to="/sign-in" onClick={onLogOut}>
+              <Link className="header__link" to="/signin" onClick={ onSignOut}>
                 Выйти
               </Link>
             </div>
           </Route>
 
-        </Switch> */}
+        </Switch>
     </header>)
 }
 
