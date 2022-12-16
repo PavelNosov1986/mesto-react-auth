@@ -233,16 +233,16 @@ function App() {
                 >
                 </ProtectedRoute>
 
-                <Route exact path="/">
-                    {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
-                </Route>
-
                 <Route path="/signup">
                     <Register onRegister={handleRegister} />
                 </Route>
 
                 <Route path="/signin">
                     <Login onLogin={handleLogin} />
+                </Route>
+
+                <Route>
+                    {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
                 </Route>
 
             </Switch>
