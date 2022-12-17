@@ -28,7 +28,7 @@ function App() {
     const [isRegistered, setIsRegistered] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
     const [isInfoTooltipOpened, setIsInfoTooltipOpened] = useState(false);
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState("");   
     const history = useHistory();
 
     useEffect(() => {
@@ -50,26 +50,19 @@ function App() {
                 });
         }
     }, [history]);
+   
 
     useEffect(() => {
-        api.fetchGetMe()
-            .then((user) => {
-                setCurrentUser(user);
-            })
-            .catch((err) => {
-                console.log('Ошибка. Запрос не выполнен');
-            });
-    }, []);
-
-    useEffect(() => {
-        api.fetchGetCards()
-            .then((cards) => {
-                setCards(cards);
-            })
-            .catch((err) => {
-                console.log('Ошибка. Запрос не выполнен');
-            });
-    }, []);
+        if (loggedIn) {
+            api.fetchGetCards()
+                .then((cards) => {
+                    setCards(cards);
+                })
+                .catch((err) => {
+                    console.log('Ошибка. Запрос не выполнен');
+                });
+        }
+    }, [loggedIn]);
 
     function handleEditProfileClick() {
         setIsEditProfilePopupOpen(true);
@@ -241,9 +234,9 @@ function App() {
                     <Login onLogin={handleLogin} />
                 </Route>
 
-                <Route>
+                {/* <Route>
                     {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
-                </Route>
+                </Route> */}
 
             </Switch>
             <Footer />
