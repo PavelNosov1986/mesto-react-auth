@@ -28,7 +28,7 @@ function App() {
     const [isRegistered, setIsRegistered] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
     const [isInfoTooltipOpened, setIsInfoTooltipOpened] = useState(false);
-    const [email, setEmail] = useState("");   
+    const [email, setEmail] = useState("");
     const history = useHistory();
 
     useEffect(() => {
@@ -50,13 +50,24 @@ function App() {
                 });
         }
     }, [history]);
-   
 
     useEffect(() => {
         if (loggedIn) {
             api.fetchGetCards()
                 .then((cards) => {
                     setCards(cards);
+                })
+                .catch((err) => {
+                    console.log('Ошибка. Запрос не выполнен');
+                });
+        }
+    }, [loggedIn]);
+
+    useEffect(() => {
+        if (loggedIn) {
+            api.fetchGetMe()
+                .then((user) => {
+                    setCurrentUser(user);
                 })
                 .catch((err) => {
                     console.log('Ошибка. Запрос не выполнен');
@@ -233,10 +244,6 @@ function App() {
                 <Route path="/signin">
                     <Login onLogin={handleLogin} />
                 </Route>
-
-                {/* <Route>
-                    {loggedIn ? <Redirect to="/" /> : <Redirect to="/signin" />}
-                </Route> */}
 
             </Switch>
             <Footer />

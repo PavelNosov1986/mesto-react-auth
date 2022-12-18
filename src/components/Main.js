@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import Avatar from '../images/Avatar.jpg';
 import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function Main(props) {
     const currentUser = useContext(CurrentUserContext);
-
+    
     return (<>
         <main className="content">
             <section className="profile">
